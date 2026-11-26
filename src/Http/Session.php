@@ -64,4 +64,18 @@ final class Session
         unset($_SESSION['flash']);
         return $flash;
     }
+        public static function put(string $key, mixed $value): void
+    {
+        $_SESSION[$key] = $value;
+    }
+
+    public static function get(string $key): mixed
+    {
+        return $_SESSION[$key] ?? null;
+    }
+
+    public static function forget(string $key): void
+    {
+        unset($_SESSION[$key]);
+    }
 }

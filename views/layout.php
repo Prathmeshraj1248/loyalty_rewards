@@ -8,7 +8,11 @@ $active = $active ?? '';
 
 $links = match ($nav) {
     'customer' => ['home' => ['/dashboard', 'Home'], 'history' => ['/history', 'History']],
-    'admin'    => ['home' => ['/admin', 'Dashboard']],
+    'admin'    => [
+        'home'     => ['/admin', 'Dashboard'],
+        'products' => ['/admin/products', 'Products'],
+        'batches'  => ['/admin/batches', 'Code batches'],
+    ],
     default    => [],
 };
 ?>

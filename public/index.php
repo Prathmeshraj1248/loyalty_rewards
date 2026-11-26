@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Config\Env;
+use App\Controllers\AdminController;
 use App\Controllers\CustomerController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
@@ -34,5 +35,13 @@ $router->post('/logout',   [new AuthController(), 'logout']);
 $router->get('/dashboard', [new CustomerController(), 'dashboard']);
 $router->get('/history',   [new CustomerController(), 'history']);
 $router->get('/admin',     [new DashboardController(), 'admin']);
+$router->get('/admin/products',          [new AdminController(), 'products']);
+$router->post('/admin/products/create',  [new AdminController(), 'createProduct']);
+$router->post('/admin/products/update',  [new AdminController(), 'updateProduct']);
+$router->post('/admin/products/toggle',  [new AdminController(), 'toggleProduct']);
+$router->get('/admin/batches',           [new AdminController(), 'batches']);
+$router->post('/admin/batches/generate', [new AdminController(), 'generateBatch']);
+$router->get('/admin/batches/sheet',     [new AdminController(), 'sheet']);
+
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
