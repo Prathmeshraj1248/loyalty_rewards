@@ -42,7 +42,8 @@ $input = 'mt-1.5 w-full rounded-xl border border-slate-300 px-3 py-2 outline-non
         <table class="w-full text-left text-sm">
           <thead class="text-xs uppercase tracking-wide text-slate-400">
             <tr><th class="px-3 py-2">Batch</th><th class="px-3 py-2">Product</th><th class="px-3 py-2">Created</th>
-                <th class="px-3 py-2 text-right">Unused</th><th class="px-3 py-2 text-right">Claimed</th><th class="px-3 py-2 text-right">Blocked</th></tr>
+                <th class="px-3 py-2 text-right">Unused</th><th class="px-3 py-2 text-right">Claimed</th><th class="px-3 py-2 text-right">Blocked</th>
+                <th class="px-3 py-2 text-right">Action</th></tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
             <?php foreach ($batches as $b): ?>
@@ -53,7 +54,14 @@ $input = 'mt-1.5 w-full rounded-xl border border-slate-300 px-3 py-2 outline-non
                 <td class="px-3 py-3 text-right"><?= $e((int) $b['unused']) ?></td>
                 <td class="px-3 py-3 text-right text-emerald-600"><?= $e((int) $b['claimed']) ?></td>
                 <td class="px-3 py-3 text-right text-rose-600"><?= $e((int) $b['blocked']) ?></td>
-              </tr>
+                <td class="px-3 py-3 text-right">  <?php if ((int) $b['unused'] > 0): ?>
+                <form method="post" action="<?= $e($url('/admin/batches/block')) ?>" onsubmit="return confirm('Block all unused codes in batch #<?= $e($b['id']) ?>? Customers will not be able to claim them.');">
+                <?= Csrf::field() ?>
+                <input type="hidden" name="batch_id" value="<?= $e($b['id']) ?>">
+                <button class="text-xs font-semibold text-rose-600 hover:underline">Block unused</button>
+                </form>
+                <?php endif; ?></td>
+              </tr> 
             <?php endforeach; ?>
           </tbody>
         </table>
