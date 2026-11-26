@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use App\Config\Env;
+use App\Controllers\CustomerController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\HealthController;
@@ -30,7 +31,8 @@ $router->get('/login',     [new AuthController(), 'showLogin']);
 $router->post('/login',    [new AuthController(), 'login']);
 $router->post('/logout',   [new AuthController(), 'logout']);
 
-$router->get('/dashboard', [new DashboardController(), 'customer']);
+$router->get('/dashboard', [new CustomerController(), 'dashboard']);
+$router->get('/history',   [new CustomerController(), 'history']);
 $router->get('/admin',     [new DashboardController(), 'admin']);
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
