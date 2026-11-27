@@ -96,3 +96,12 @@ CREATE TABLE settings (
 INSERT INTO settings (setting_key, setting_value) VALUES
   ('rupees_per_coin', '1.00'),
   ('min_redeem_coins', '100');
+
+
+CREATE TABLE login_attempts (
+  id         BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  email      VARCHAR(190) NOT NULL,
+  ip_address VARCHAR(45) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_email_time (email, created_at)
+) ENGINE=InnoDB;

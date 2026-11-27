@@ -7,16 +7,18 @@ $nav    = $nav ?? null;      // 'customer', 'admin' or null (logged out)
 $active = $active ?? '';
 
 $links = match ($nav) {
-    'customer' => ['home' => ['/dashboard', 'Home'], 
-    'claim' => ['/claim', 'Claim coins'], 
-    'history' => ['/history', 'History'],
-    'redeem' => ['/redeem', 'Redeem']]
-      'admin'    => [
-        'home'      => ['/admin', 'Dashboard'],
-        'products'  => ['/admin/products', 'Products'],
-        'batches'   => ['/admin/batches', 'Code batches'],
-        'codes'     => ['/admin/codes', 'Codes'],
-        'customers' => ['/admin/customers', 'Customers'],
+    'customer' => [
+        'home'    => ['/dashboard', 'Home'],
+        'claim'   => ['/claim', 'Claim coins'],
+        'history' => ['/history', 'History'],
+        'redeem'  => ['/redeem', 'Redeem'],
+    ],
+    'admin'    => [
+        'home'        => ['/admin', 'Dashboard'],
+        'products'    => ['/admin/products', 'Products'],
+        'batches'     => ['/admin/batches', 'Code batches'],
+        'codes'       => ['/admin/codes', 'Codes'],
+        'customers'   => ['/admin/customers', 'Customers'],
         'redemptions' => ['/admin/redemptions', 'Redemptions'],
     ],
     default    => [],
