@@ -26,6 +26,11 @@ $basePath = parse_url(Env::get('APP_URL', ''), PHP_URL_PATH) ?: '';
 Url::setBase($basePath);
 Session::start();
 
+header('X-Content-Type-Options: nosniff');   // browser must not guess file types
+header('X-Frame-Options: DENY');             // our pages cannot be embedded (clickjacking)
+header('Referrer-Policy: same-origin');
+header('Cache-Control: no-store');           // Back button cannot show private pages
+
 $router = new Router($basePath);
 $router->get('/health', [new HealthController(), 'check']);
 
@@ -60,6 +65,7 @@ $router->get('/redeem',             [new RedeemController(), 'show']);
 $router->post('/redeem',            [new RedeemController(), 'submit']);
 $router->get('/admin/redemptions',  [new RedeemController(), 'adminList']);
 $router->post('/admin/redemptions', [new RedeemController(), 'decide']);
+$router->post('/admin/insights', [new DashboardController(), 'insights']);
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

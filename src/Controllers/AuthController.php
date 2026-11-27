@@ -65,14 +65,27 @@ final class AuthController
         View::render('auth/login', ['title' => 'Log in', 'error' => null, 'old' => []]);
     }
 
-    public function login(): void
+        public function login(): void
     {
         $this->requireValidCsrf('/login');
 
-        $email  = (string) ($_POST['email'] ?? '');
+        $email = (string) ($_POST['email'] ?? '');
+        $key   = substr(strtolower(trim($email)), 0, 190);
+        $pdo   = Database::connection();
+
+        // Throttle: 5 failed logins per email in 15 minutes.
+        $count = $pdo->prepare('SELECT COUNT(*) FROM login_attempts WHERE email = ? AND created_at >= (NOW() - INTERVAL 15 MINUTE)');
+        $count->execute([$key]);
+        if ((int) $count->fetchColumn() >= 5) {
+            View::render('auth/login', ['title' => 'Log in', 'error' => 'Too many failed logins. Please wait 15 minutes.', 'old' => ['email' => $email]], 429);
+            return;
+        }
+
         $result = $this->auth->login($email, (string) ($_POST['password'] ?? ''));
 
         if ($result['user'] === null) {
+            $pdo->prepare('INSERT INTO login_attempts (email, ip_address) VALUES (?, ?)')
+                ->execute([$key, $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0']);
             View::render('auth/login', ['title' => 'Log in', 'error' => $result['error'], 'old' => ['email' => $email]], 401);
             return;
         }

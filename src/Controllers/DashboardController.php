@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+use App\Http\Csrf;
+use App\Http\Session;
+use App\Http\Url;
+use App\Services\InsightService;
 namespace App\Controllers;
 
 use App\Config\Database;
@@ -21,6 +25,16 @@ final class DashboardController
             'daily'    => $stats->dailyClaims(),
             'top'      => $stats->topCustomers(5),
             'attempts' => $stats->recentAttempts(10),
+            'flags'     => (new InsightService(Database::connection()))->flags(),
+            'aiSummary' => Session::get('ai_summary'),
         ]);
+    }
+    public function insights(): void
+    {
+        Auth::requireRole('admin');
+        Csrf::enforce('/admin');
+        $svc = new InsightService(Database::connection());
+        Session::put('ai_summary', $svc->summarise($svc->flags()));
+        Url::redirect('/admin');
     }
 }

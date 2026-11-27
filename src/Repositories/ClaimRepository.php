@@ -83,4 +83,15 @@ final class ClaimRepository
             error_log('claim_attempts insert failed: ' . $e->getMessage());
         }
     }
+        /** Failed attempts in the last 15 minutes: [by this user, by this IP]. */
+    public function failureCounts(int $userId, string $ip): array
+    {
+        $base = "SELECT COUNT(*) FROM claim_attempts WHERE result IN ('invalid','already_claimed','blocked')
+                 AND created_at >= (NOW() - INTERVAL 15 MINUTE) AND ";
+        $byUser = $this->pdo->prepare($base . 'user_id = ?');
+        $byUser->execute([$userId]);
+        $byIp = $this->pdo->prepare($base . 'ip_address = ?');
+        $byIp->execute([$ip]);
+        return [(int) $byUser->fetchColumn(), (int) $byIp->fetchColumn()];
+    }
 }

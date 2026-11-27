@@ -95,3 +95,25 @@ $cards = [
     </div>
   </div>
 </section>
+  <div class="mt-6 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold text-slate-900">Security insights (last 24 hours)</h2>
+      <form method="post" action="<?= $e($url('/admin/insights')) ?>">
+        <?= \App\Http\Csrf::field() ?>
+        <button class="rounded-xl px-4 py-2 text-sm font-semibold text-indigo-600 ring-1 ring-indigo-200 transition hover:bg-indigo-50">Summarise with AI</button>
+      </form>
+    </div>
+    <?php if (!$flags): ?>
+      <p class="py-6 text-center text-sm text-slate-500">No suspicious activity detected.</p>
+    <?php else: ?>
+      <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-700">
+        <?php foreach ($flags as $f): ?><li><?= $e($f) ?></li><?php endforeach; ?>
+      </ul>
+    <?php endif; ?>
+    <?php if ($aiSummary): ?>
+      <div class="mt-4 rounded-xl bg-indigo-50 p-4 text-sm text-slate-800">
+        <p class="text-xs font-semibold uppercase text-indigo-600"><?= $e($aiSummary['source']) ?> summary</p>
+        <p class="mt-1 whitespace-pre-line"><?= $e($aiSummary['text']) ?></p>
+      </div>
+    <?php endif; ?>
+  </div>

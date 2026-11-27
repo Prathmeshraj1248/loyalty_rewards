@@ -20,6 +20,13 @@ final class ClaimService
      */
     public function claim(int $userId, string $input, string $ip): array
     {
+        // 0. Too many recent failures? Refuse BEFORE looking at the code at all.
+        [$byUser, $byIp] = $this->claims->failureCounts($userId, $ip);
+        if ($byUser >= 5 || $byIp >= 20) {
+            $this->claims->logAttempt($userId, null, 'rate_limited', $ip);
+            return ['ok' => false, 'message' => 'Too many wrong attempts. Please wait 15 minutes and try again.'];
+        }
+
         // 1. Cheap check first: right length, characters and checksum. No database needed.
         $code = $this->codes->normalize($input);
         if (!$this->codes->isWellFormed($code)) {
