@@ -16,3 +16,20 @@
     <p class="mt-4 text-xs text-slate-400">Dashes and spaces do not matter. Each code can be used only once.</p>
   </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<div class="mx-auto mt-4 max-w-md rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+  <button type="button" id="camBtn" class="w-full rounded-xl py-2.5 font-semibold text-indigo-600 ring-1 ring-indigo-200 transition hover:bg-indigo-50">Scan with camera</button>
+  <div id="reader" class="mt-4"></div>
+</div>
+<script>
+  const input = document.querySelector('input[name=code]');
+  // A sticker QR opens /scan#CODE: prefill the box. The customer still presses Claim, and the SERVER decides.
+  if (location.hash.length > 1) input.value = decodeURIComponent(location.hash.slice(1));
+  document.getElementById('camBtn').onclick = () => {
+    const scanner = new Html5Qrcode('reader');
+    scanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 220 }, text => {
+      input.value = text.includes('#') ? text.split('#').pop() : text;
+      scanner.stop();
+    }).catch(() => alert('Camera not available. Please type the code instead.'));
+  };
+</script>

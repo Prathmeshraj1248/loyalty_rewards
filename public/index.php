@@ -10,6 +10,7 @@ use App\Controllers\AuthController;
 use App\Controllers\ClaimController;
 use App\Controllers\DashboardController;
 use App\Controllers\HealthController;
+use App\Controllers\RedeemController;
 use App\Http\Session;
 use App\Http\Url;
 use App\Router;
@@ -38,6 +39,7 @@ $router->post('/logout',   [new AuthController(), 'logout']);
 $router->get('/dashboard', [new CustomerController(), 'dashboard']);
 $router->get('/history',   [new CustomerController(), 'history']);
 $router->get('/claim',     [new ClaimController(), 'show']);
+$router->get('/scan', [new ClaimController(), 'show']);
 $router->post('/claim',    [new ClaimController(), 'submit']);
 $router->get('/admin',     [new DashboardController(), 'admin']);
 $router->get('/admin/products',          [new AdminController(), 'products']);
@@ -54,6 +56,10 @@ $router->post('/admin/codes/unblock',   [new CodeAdminController(), 'unblock']);
 $router->post('/admin/batches/block',   [new CodeAdminController(), 'blockBatch']);
 $router->get('/admin/customers',        [new CustomerAdminController(), 'index']);
 $router->post('/admin/customers/toggle', [new CustomerAdminController(), 'toggle']);
+$router->get('/redeem',             [new RedeemController(), 'show']);
+$router->post('/redeem',            [new RedeemController(), 'submit']);
+$router->get('/admin/redemptions',  [new RedeemController(), 'adminList']);
+$router->post('/admin/redemptions', [new RedeemController(), 'decide']);
 
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
